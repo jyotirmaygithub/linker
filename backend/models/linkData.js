@@ -14,7 +14,7 @@ const linkData = new Schema({
         type: String,
         required: true,
     },
-    keyword: {
+    keywords: {
         type: [],
         required: true,
     },

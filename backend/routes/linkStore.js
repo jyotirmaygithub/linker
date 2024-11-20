@@ -24,6 +24,8 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
+    console.log("linkstore = ", keywords);
+
     try {
       // Check if the link already exists
       let link = await Link.findOne({ url });
@@ -33,10 +35,10 @@ router.post(
 
       // Create a new link
       const newLink = new Link({
-        url,
-        title,
-        content,
-        keywords,
+        url: url,
+        title: title,
+        content: content,
+        keywords: keywords,
       });
 
       await newLink.save(); // Save the new link in the database
