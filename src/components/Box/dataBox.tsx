@@ -1,6 +1,7 @@
 // src/dataExtraction/ExtractData.tsx
 import React, { useState } from 'react';
 import KeywordTag from '../tag/keyword';
+import ChatBot from '../dataExtraction/chatBot';
 
 interface ExtractDataProps {
   title: string;
@@ -46,7 +47,7 @@ const ExtractData: React.FC<ExtractDataProps> = ({ title, content, keywords }) =
           type="text"
           value={editableTitle}
           onChange={handleTitleChange}
-          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
         />
       </div>
       <div className="mb-4">
@@ -55,7 +56,7 @@ const ExtractData: React.FC<ExtractDataProps> = ({ title, content, keywords }) =
           value={editableContent}
           onChange={handleContentChange}
           rows={10}
-          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
         />
       </div>
       <div className="mb-4">
@@ -74,7 +75,7 @@ const ExtractData: React.FC<ExtractDataProps> = ({ title, content, keywords }) =
             type="text"
             value={newKeyword}
             onChange={handleKeywordInputChange}
-            className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 mr-2"
+            className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 mr-2"
             placeholder="Add a keyword"
           />
           <button
@@ -84,6 +85,9 @@ const ExtractData: React.FC<ExtractDataProps> = ({ title, content, keywords }) =
           >
             Add
           </button>
+        </div>
+        <div className='my-8'>
+        <ChatBot/>
         </div>
       </div>
     </div>
