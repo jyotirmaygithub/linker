@@ -71,9 +71,8 @@ function extractDescription(content) {
 function extractKeywords(description) {
   const keywordsMatch = description.match(/Keywords:\s*(.*?)(\n|$)/);
   if (!keywordsMatch) {
-    return "No Keywords Found";
+    return [];
   }
-
   const options = {
     language: "english",
     remove_digits: true,
@@ -86,7 +85,7 @@ function extractKeywords(description) {
     .map(keyword => keyword.replace(/[^\w\s]/g, ""))
     .filter(keyword => keyword.trim() !== "");
 
-  return cleanedKeywords.slice(0, 6).join(", ");
+  return cleanedKeywords.slice(0, 6);
 }
 
 router.post('/chat-bot', async (req, res) => {
