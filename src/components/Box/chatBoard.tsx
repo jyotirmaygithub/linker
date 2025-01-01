@@ -13,12 +13,15 @@ interface ChatBoardProps {
 }
 
 const ChatBoard: React.FC<ChatBoardProps> = ({ messages, searchType }) => {
+  console.log("entire message", messages);
+  console.log("search =", searchType);
   const [messageKeywords, setMessageKeywords] = useState<string[]>([]);
 
   const removeKeyword = (keywordToRemove: string) => {
-    setMessageKeywords(messageKeywords.filter((keyword) => keyword !== keywordToRemove));
+    setMessageKeywords(
+      messageKeywords.filter((keyword) => keyword !== keywordToRemove)
+    );
   };
-
 
   useEffect(() => {
     if (messages?.keywords) {
@@ -30,7 +33,7 @@ const ChatBoard: React.FC<ChatBoardProps> = ({ messages, searchType }) => {
   console.log("message from backend = ", messages?.title);
   console.log("messsage keywords = ,", messageKeywords);
 
-  function capitalizeFirstLetter(searchType: string){
+  function capitalizeFirstLetter(searchType: string) {
     return searchType.charAt(0).toUpperCase() + searchType.slice(1);
   }
 
@@ -42,17 +45,30 @@ const ChatBoard: React.FC<ChatBoardProps> = ({ messages, searchType }) => {
       <div className="p-3 rounded-lg">
         <div className="space-y-5">
           <p className="font-bold">{capitalizeFirstLetter(searchType)} :</p>
+          {searchType === "whole" && (
+            <div className="space-y-4">
+              <p>{messages?.title}</p>
+              <p>{messages?.description}</p>
+              <div className="flex space-x-4">{messageKeywords.map((keyword) => (
+                <KeywordTag
+                  key={keyword}
+                  keyword={keyword}
+                  onRemove={removeKeyword}
+                />
+              ))}</div>
+            </div>
+          )}
           {searchType === "title" && <p>{messages?.title}</p>}
           {searchType === "description" && <p>{messages?.description}</p>}
           <div className="flex space-x-2">
-          {searchType === "keywords" && messageKeywords.map((keyword) => (
-            <KeywordTag
-              key={keyword}
-              keyword={keyword}
-              onRemove={removeKeyword}
-            />
-          ))}
-
+            {searchType === "keywords" &&
+              messageKeywords.map((keyword) => (
+                <KeywordTag
+                  key={keyword}
+                  keyword={keyword}
+                  onRemove={removeKeyword}
+                />
+              ))}
           </div>
         </div>
       </div>

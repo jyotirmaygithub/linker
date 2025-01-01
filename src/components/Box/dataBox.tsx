@@ -1,7 +1,9 @@
 // src/dataExtraction/ExtractData.tsx
-import React, { useState } from 'react';
-import KeywordTag from '../tag/keyword';
-import ChatBot from '../dataExtraction/chatBot';
+import React, { useEffect, useState } from "react";
+import KeywordTag from "../tag/keyword";
+import ChatBot from "../dataExtraction/chatBot";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store"; // Adjust the path as necessary
 
 interface ExtractDataProps {
   title: string;
@@ -9,11 +11,34 @@ interface ExtractDataProps {
   keywords: string[];
 }
 
-const ExtractData: React.FC<ExtractDataProps> = ({ title, content, keywords }) => {
+const ExtractData: React.FC<ExtractDataProps> = ({
+  title,
+  content,
+  keywords,
+}) => {
   const [editableTitle, setEditableTitle] = useState(title);
   const [editableContent, setEditableContent] = useState(content);
   const [editableKeywords, setEditableKeywords] = useState(keywords);
-  const [newKeyword, setNewKeyword] = useState('');
+  const [newKeyword, setNewKeyword] = useState("");
+  const gptSelection = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    console.log("want to check", gptSelection);
+    if (gptSelection.usersearchType === "whole") {
+      setEditableTitle(gptSelection.gptData?.title || "");
+      setEditableContent(gptSelection.gptData?.description || "");
+      setEditableKeywords(gptSelection.gptData?.keywords || []);
+    }
+    if (gptSelection.usersearchType === "title") {
+      setEditableTitle(gptSelection.gptData?.title || "");
+    }
+    if (gptSelection.usersearchType === "description") {
+      setEditableContent(gptSelection.gptData?.description || "");
+    }
+    if (gptSelection.usersearchType === "keywords") {
+      setEditableKeywords(gptSelection.gptData?.keywords || []);
+    }
+  }, [gptSelection]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditableTitle(e.target.value);
@@ -31,18 +56,22 @@ const ExtractData: React.FC<ExtractDataProps> = ({ title, content, keywords }) =
   const handleAddKeyword = () => {
     if (newKeyword.trim()) {
       setEditableKeywords([...editableKeywords, newKeyword.trim()]);
-      setNewKeyword(''); // Reset the input field after adding
+      setNewKeyword(""); // Reset the input field after adding
     }
   };
 
   const removeKeyword = (keywordToRemove: string) => {
-    setEditableKeywords(editableKeywords.filter((keyword) => keyword !== keywordToRemove));
+    setEditableKeywords(
+      editableKeywords.filter((keyword) => keyword !== keywordToRemove)
+    );
   };
 
   return (
     <div className="p-4 border rounded-lg shadow-md w-full max-w-4xl">
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">Title:</label>
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          Title:
+        </label>
         <input
           type="text"
           value={editableTitle}
@@ -51,7 +80,9 @@ const ExtractData: React.FC<ExtractDataProps> = ({ title, content, keywords }) =
         />
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">Content:</label>
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          Content:
+        </label>
         <textarea
           value={editableContent}
           onChange={handleContentChange}
@@ -60,7 +91,9 @@ const ExtractData: React.FC<ExtractDataProps> = ({ title, content, keywords }) =
         />
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">Keywords:</label>
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          Keywords:
+        </label>
         <div className="mt-2 flex flex-wrap gap-2">
           {editableKeywords.map((keyword) => (
             <KeywordTag
@@ -86,8 +119,8 @@ const ExtractData: React.FC<ExtractDataProps> = ({ title, content, keywords }) =
             Add
           </button>
         </div>
-        <div className='my-8'>
-        <ChatBot/>
+        <div className="my-8">
+          <ChatBot />
         </div>
       </div>
     </div>

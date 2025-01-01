@@ -49,7 +49,7 @@ router.post(
         link: newLink, // You can return the stored link if needed
       });
     } catch (error) {
-      console.error(error.message);
+      console.log(error.message);
       res.status(500).send("Internal server error occurred");
     }
   }
