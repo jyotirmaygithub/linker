@@ -27,7 +27,7 @@ const isStrongPassword = (password) => {
 
 router.post("/newuser", async (req, res) => {
   const { username, emailId, password } = req.body;
-  console.log("email = ", username);
+  console.log("email = ", emailId);
 
   // Basic validation using destructuring
   if (!username || !emailId || !password) {
@@ -50,8 +50,10 @@ router.post("/newuser", async (req, res) => {
   }
 
   try {
-    let existingUser = await user.findOne({ emailId });
+    let existingUser = await user.findOne({ email :emailId });
     if (existingUser) {
+      console.log("username = ", username)
+      console.log("existing = ",existingUser);
       console.log("email", emailId);
       return res.status(400).json({ message: "User already exists" });
     }
@@ -63,6 +65,7 @@ router.post("/newuser", async (req, res) => {
   try {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
+    console.log("hash = ", hashedPassword);
 
     const newUser = await user.create({
       username: username,
@@ -82,16 +85,17 @@ router.post("/newuser", async (req, res) => {
 
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { emailId, password } = req.body;
+  console.log("email id= ", emailId)
 
-  if (!email || !password) {
+  if (!emailId || !password) {
     return res.status(400).json({ message: "Email and password are required" });
   }
 
   try {
-    const existingUser = await user.findOne({ email });
+    const existingUser = await user.findOne({ email: emailId });
     if (!existingUser) {
-      return res.status(401).json({ msg: "User does not exist!" });
+      return res.status(401).json({ message: "User does not exist!" });
     }
 
     const isPasswordValid = await bcrypt.compare(
@@ -99,7 +103,7 @@ router.post("/login", async (req, res) => {
       existingUser.password
     );
     if (!isPasswordValid) {
-      return res.status(401).json({ msg: "Invalid Credentials" });
+      return res.status(401).json({ message: "Invalid Credentials" });
     }
 
     const data = idObject(existingUser);

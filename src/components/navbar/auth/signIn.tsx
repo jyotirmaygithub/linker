@@ -8,14 +8,10 @@ import {
   IconButton,
   Avatar,
   InputAdornment,
-  Link,
 } from "@mui/material";
 import axios from "axios";
 import { toast } from "react-toastify";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 // import CloseIcon from '@mui/icons-material/Close';
 import Loader from "./../../../utils/loader/loading";
@@ -43,12 +39,15 @@ export default function SignIn() {
   const [isValidName, setIsValidName] = useState(true);
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);
+  const [isValidConfirmPassword, setIsValidConfirmPassword] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     console.log(username, emailId, password);
 
     axios
@@ -58,27 +57,38 @@ export default function SignIn() {
         password,
       })
       .then((response) => {
+        setLoading(false)
         toast.success("Sign In successful");
         console.log(response.data);
       })
       .catch((error) => {
-        toast.error("Invalid credentials");
-        console.log(error);
+        setLoading(false)
+        if (error.response) {
+          const serverMessage = error.response.data.message;
+          toast.error(serverMessage || "An unknown error occurred.");
+          console.log("Error from server:", error.response.data);
+        } else if (error.request) {
+          toast.error("No response from the server. Please try again.");
+          console.log("No response received:", error.request);
+        } else {
+          // Something else went wrong
+          toast.error(`Error: ${error.message}`);
+          console.log("Error:", error.message);
+        }
       });
   };
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {value } = e.target;
-    console.log("value to check = ", value)
-    setUsername(e.target.value);
-    console.log("what is username = ",username)
-    setIsValidName(username.length >= 4 && username.length <= 20);
+    const newUser = e.target.value;
+    setUsername(newUser);
+    console.log("what is username = ", username);
+    setIsValidName(newUser.length >= 4 && newUser.length <= 20);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;  // Get the current input value
-  
-console.log("new to value = ",value)
+    const { value } = event.target; // Get the current input value
+
+    console.log("new to value = ", value);
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,6 +105,7 @@ console.log("new to value = ",value)
 
     // Regular expression for password validation
     const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{8,}$/;
+    console.log("check = ", passwordRegex.test(newPassword));
 
     setIsValidPassword(passwordRegex.test(newPassword));
   };
@@ -102,9 +113,11 @@ console.log("new to value = ",value)
   const handleConfirmPasswordChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setConfirmPassword(e.target.value);
+    const newPassword = e.target.value;
+    setConfirmPassword(newPassword);
+    console.log("pass =", newPassword !== password);
 
-    setConfirmShowPassword(confirmPassword !== password);
+    setIsValidConfirmPassword(newPassword === password);
   };
 
   const handleShowPasswordClick = () => {
@@ -115,14 +128,7 @@ console.log("new to value = ",value)
     setConfirmShowPassword(!showConfirmPassword);
   };
 
-  // let isSignInDisabled = !(
-  //   email &&
-  //   password &&
-  //   isValidEmail &&
-  //   confirmPassword &&
-  //   name &&
-  //   isValidName
-  // );
+  let isSignInDisabled = !(username && emailId && password && confirmPassword && isValidName && isValidEmail && isValidPassword && isValidConfirmPassword);
 
   return (
     <>
@@ -206,6 +212,12 @@ console.log("new to value = ",value)
               variant="outlined"
               type={showConfirmPassword ? "text" : "password"}
               fullWidth
+              error={!isValidConfirmPassword && confirmPassword !== ""}
+              helperText={
+                !isValidConfirmPassword && confirmPassword !== ""
+                  ? "Passwords do not match."
+                  : ""
+              }
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -222,15 +234,6 @@ console.log("new to value = ",value)
               value={confirmPassword}
               onChange={handleConfirmPasswordChange}
             />
-
-            {/* <Typography variant="body2" className="mt-2">
-              I acknowledge ecommerce will use my information in accordance with
-              its{" "} */}
-            {/* <Link to="#" className="text-primary no-underline">
-                Privacy Policy.
-              </Link> */}
-            {/* </Typography> */}
-
             <Button
               variant="contained"
               fullWidth
@@ -243,10 +246,11 @@ console.log("new to value = ",value)
                 },
               }}
               type="submit"
-              // disabled={isSignInDisabled || loading}
+              onClick={handleSignIn}
+              disabled={isSignInDisabled || loading}
             >
               Sign In
-              {/* {loading ? <Loader loaderColor={"white"}  loaderSize={30} /> : "CREATE ACCOUNT"} */}
+              {loading && <Loader loaderColor={"white"}  loaderSize={30} />}
             </Button>
 
             <Typography className="flex justify-center space-x-2">

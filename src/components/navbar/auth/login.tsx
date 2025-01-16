@@ -6,10 +6,16 @@ import {
   Typography,
   TextField,
   IconButton,
+  Avatar,
+  InputAdornment,
+  Link,
 } from "@mui/material";
 import axios from "axios";
 import { toast } from "react-toastify";
-// import CloseIcon from '@mui/icons-material/Close';
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import Loader from "./../../../utils/loader/loading";
+import Copyright from "../../../utils/copyright";
 
 const style = {
   position: "absolute",
@@ -22,43 +28,88 @@ const style = {
   p: 4,
 };
 
-export default function Login() {
+export default function LogIn() {
   const [open, setOpen] = useState(false);
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isValidPassword, setIsValidPassword] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogIn = (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    console.log(emailId, password);
+
     axios
-      .post("http://localhost:5000/api/auth/login", { emailId, password })
+      .post("http://localhost:5000/api/auth/login", {
+        emailId,
+        password,
+      })
       .then((response) => {
+        setLoading(false);
         toast.success("Login successful");
         console.log(response.data);
       })
       .catch((error) => {
-        toast.error("Invalid credentials");
-        console.log(error);
+        setLoading(false);
+        console.log("error message = ", error);
+        if (error.response) {
+          const serverMessage = error.response.data.message;
+          toast.error(serverMessage || "An unknown error occurred.");
+          console.log("Error from server:", error.response.data);
+        } else if (error.request) {
+          toast.error("No response from the server. Please try again.");
+          console.log("No response received:", error.request);
+        } else {
+          // Something else went wrong
+          toast.error(`Error: ${error.message}`);
+          console.log("Error:", error.message);
+        }
       });
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmailId(e.target.value);
+    const newEmail = e.target.value;
+    setEmailId(newEmail);
+    setIsValidEmail(
+      newEmail !== "" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)
+    );
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+
+    // Regular expression for password validation
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{8,}$/;
+    console.log("check = ", passwordRegex.test(newPassword));
+
+    setIsValidPassword(passwordRegex.test(newPassword));
   };
 
+  const handleShowPasswordClick = () => {
+    setShowPassword(!showPassword);
+  };
+
+  let isSignInDisabled = !(
+    emailId &&
+    password &&
+    isValidEmail &&
+    isValidPassword
+  );
+
   return (
-    <div>
+    <>
       <button
         className="bg-blue-400 text-white text-lg px-3 py-2 hover:bg-blue-500"
         onClick={handleOpen}
       >
-        Login
+        Log In
       </button>
       <Modal
         open={open}
@@ -66,52 +117,88 @@ export default function Login() {
         aria-labelledby="login-modal-title"
       >
         <Box sx={style}>
-          <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            {/* <CloseIcon /> */}
-          </IconButton>
-          <Typography id="login-modal-title" variant="h5" component="h2">
-            Login
-          </Typography>
-          <TextField
-            onChange={handleEmailChange}
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            onChange={handlePasswordChange}
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <button
-            onClick={handleLogin}
-            className="w-full bg-black text-white px-3 py-2"
-            type="submit"
-          >
-            Login
-          </button>
+          <div className="flex justify-center">
+            <Avatar sx={{ m: 1, bgcolor: "#000000" }}>
+              <LockOpenIcon />
+            </Avatar>
+          </div>
+          <div className="space-y-5">
+            <Typography variant="h5" component="h3" className="text-center">
+              Login your Account!
+            </Typography>
+            <TextField
+              label="Email"
+              variant="outlined"
+              fullWidth
+              value={emailId}
+              onChange={handleEmailChange}
+              error={!isValidEmail && emailId !== ""}
+              helperText={
+                !isValidEmail && emailId !== ""
+                  ? "Please enter a valid email address."
+                  : ""
+              }
+            />
+            <TextField
+              label="Password"
+              variant="outlined"
+              type={showPassword ? "text" : "password"}
+              fullWidth
+              error={!isValidPassword && password !== ""}
+              helperText={
+                !isValidPassword && password !== ""
+                  ? "Must include 8+ characters, a capital letter, a number, and a special character."
+                  : ""
+              }
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton edge="end" onClick={handleShowPasswordClick}>
+                      {showPassword ? (
+                        <VisibilityOff sx={{ fontSize: 30 }} />
+                      ) : (
+                        <Visibility sx={{ fontSize: 30 }} />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              value={password}
+              onChange={handlePasswordChange}
+            />
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{
+                my: 3,
+                bgcolor: "#000000",
+                borderRadius: "20px",
+                "&:hover": {
+                  bgcolor: "#454943",
+                },
+              }}
+              type="submit"
+              onClick={handleLogIn}
+              disabled={isSignInDisabled || loading}
+            >
+              Log In
+              {loading && <Loader loaderColor={"white"} loaderSize={30} />}
+            </Button>
+            <div className="space-y-1">
+              <Typography className="flex justify-end space-x-2">
+                <p>Don't have an account?</p>
+                <p className="text-primary no-underline hover:underline cursor-pointer">
+                  Sign up now
+                </p>
+              </Typography>
+              <Typography className="flex justify-end">
+                <p className="hover:underline cursor-pointer">Forgot your password?</p>
+              </Typography>
+            </div>
+            <Copyright />
+          </div>
         </Box>
       </Modal>
-    </div>
+    </>
   );
 }
