@@ -1,12 +1,12 @@
 import React from "react";
 import Nav from "../components/navbar/nav";
-import DataScrap from "../components/DataScraper/scraper";
+import Links from "../components/Links/link";
 
 export default function main() {
   return (
     <div>
       <Nav />
-      <DataScrap />
+      <Links />
     </div>
   );
 }

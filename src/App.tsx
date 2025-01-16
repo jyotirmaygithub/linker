@@ -1,6 +1,7 @@
 import React from "react";
 import SearchBar from "./components/DataScraper/scraper"; // Ensure this file has .tsx extension
 import MainPage from "./pages/mainPage"; // Ensure this file has .tsx extension
+import LinkUpload from "./pages/linkUpload";
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,9 +14,9 @@ const App: React.FC = () => {
       <Router>
         <Routes>
           <Route path="/" element={<MainPage />} />
+          <Route path="/uploadLink" element={<LinkUpload />} />
         </Routes>
       </Router>
-      {/* <MainPage /> */}
       <ToastContainer
         position="top-center"
         autoClose={5000}
