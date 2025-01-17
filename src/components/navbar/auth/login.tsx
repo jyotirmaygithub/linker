@@ -16,6 +16,8 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Loader from "./../../../utils/loader/loading";
 import Copyright from "../../../utils/copyright";
+import { getAuthToken, storeAuthToken } from "../../../redux/authToken";
+import { useDispatch } from "react-redux";
 
 const style = {
   position: "absolute",
@@ -36,6 +38,7 @@ export default function LogIn() {
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -53,7 +56,8 @@ export default function LogIn() {
       .then((response) => {
         setLoading(false);
         toast.success("Login successful");
-        console.log(response.data);
+        dispatch(storeAuthToken(response.data.auth_token))
+        console.log(response.data.auth_token);
       })
       .catch((error) => {
         setLoading(false);
@@ -202,3 +206,4 @@ export default function LogIn() {
     </>
   );
 }
+

@@ -16,6 +16,8 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 // import CloseIcon from '@mui/icons-material/Close';
 import Loader from "./../../../utils/loader/loading";
 import Copyright from "../../../utils/copyright";
+import { storeAuthToken } from "../../../redux/authToken";
+import { useDispatch } from "react-redux";
 
 const style = {
   position: "absolute",
@@ -41,6 +43,7 @@ export default function SignIn() {
   const [isValidPassword, setIsValidPassword] = useState(true);
   const [isValidConfirmPassword, setIsValidConfirmPassword] = useState(true);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -59,6 +62,7 @@ export default function SignIn() {
       .then((response) => {
         setLoading(false)
         toast.success("Sign In successful");
+         dispatch(storeAuthToken(response.data.auth_token))
         console.log(response.data);
       })
       .catch((error) => {

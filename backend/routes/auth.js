@@ -87,6 +87,7 @@ router.post("/newuser", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { emailId, password } = req.body;
   console.log("email id= ", emailId)
+  console.log("passsword = ",password)
 
   if (!emailId || !password) {
     return res.status(400).json({ message: "Email and password are required" });
@@ -102,11 +103,14 @@ router.post("/login", async (req, res) => {
       password,
       existingUser.password
     );
+
+    console.log("is password = ",isPasswordValid)
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid Credentials" });
     }
 
     const data = idObject(existingUser);
+    console.log("data = ",data)
     const auth_token = jwt.sign(data, JWT_secret);
     res.json({ auth_token });
   } catch (error) {
