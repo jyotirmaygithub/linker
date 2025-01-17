@@ -1,14 +1,22 @@
 import React from "react";
-import SearchBar from "./components/Searching/search";
-import { ToastContainer, toast } from "react-toastify";
+import SearchBar from "./components/DataScraper/scraper"; // Ensure this file has .tsx extension
+import MainPage from "./pages/mainPage"; // Ensure this file has .tsx extension
+import LinkUpload from "./pages/linkUpload";
+import { ToastContainer } from "react-toastify";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
-function App() {
+
+const App: React.FC = () => {
   return (
     <div className="App">
-      <h1 className="text-white">why </h1>
-      <SearchBar />
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/uploadLink" element={<LinkUpload />} />
+        </Routes>
+      </Router>
       <ToastContainer
         position="top-center"
         autoClose={5000}
@@ -20,10 +28,9 @@ function App() {
         draggable
         pauseOnHover
         theme="dark"
-        // transition: Bounce,
       />
     </div>
   );
-}
+};
 
 export default App;
