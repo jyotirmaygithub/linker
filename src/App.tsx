@@ -3,11 +3,13 @@ import SearchBar from "./components/DataScraper/scraper"; // Ensure this file ha
 import MainPage from "./pages/mainPage"; // Ensure this file has .tsx extension
 import LinkUpload from "./pages/linkUpload";
 import LinkDetails from "./pages/linkShowcase";
+import LogIn from "./pages/auth/login";
 import { ToastContainer } from "react-toastify";
 import Nav from "./components/navbar/nav";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import SignIn from "./pages/auth/signIn";
 
 const App: React.FC = () => {
   return (
@@ -25,6 +27,8 @@ const App: React.FC = () => {
               </>
             }
           />
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/signin" element={<SignIn />} />
         </Routes>
       </Router>
       <ToastContainer
