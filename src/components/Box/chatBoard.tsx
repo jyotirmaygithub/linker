@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import KeywordTag from "../tag/keyword";
+import { useDispatch } from "react-redux";
+import { setGptSelection } from "../../redux/gptSelectionSlice";
 
 interface Message {
   title: string;
@@ -12,10 +14,16 @@ interface ChatBoardProps {
   searchType: string;
 }
 
+interface userPreferedData {
+  usersearchType: string;
+  gptData: Message | null;
+}
+
 const ChatBoard: React.FC<ChatBoardProps> = ({ messages, searchType }) => {
   console.log("entire message", messages);
   console.log("search =", searchType);
   const [messageKeywords, setMessageKeywords] = useState<string[]>([]);
+  const dispatch = useDispatch();
 
   const removeKeyword = (keywordToRemove: string) => {
     setMessageKeywords(
@@ -37,6 +45,16 @@ const ChatBoard: React.FC<ChatBoardProps> = ({ messages, searchType }) => {
     return searchType.charAt(0).toUpperCase() + searchType.slice(1);
   }
 
+  function handlePreferedData() {
+    if (messages) {
+      console.log("message for = ", messages);
+     dispatch(setGptSelection({
+        usersearchType: searchType,
+        gptData: messages,
+      }));
+    }
+  }
+
   return (
     <div
       className="w-full max-w-4xl mx-auto p-4 bg-gray-100 rounded-lg shadow-md"
@@ -49,13 +67,15 @@ const ChatBoard: React.FC<ChatBoardProps> = ({ messages, searchType }) => {
             <div className="space-y-4">
               <p>{messages?.title}</p>
               <p>{messages?.description}</p>
-              <div className="flex space-x-4">{messageKeywords.map((keyword) => (
-                <KeywordTag
-                  key={keyword}
-                  keyword={keyword}
-                  onRemove={removeKeyword}
-                />
-              ))}</div>
+              <div className="flex space-x-4">
+                {messageKeywords.map((keyword) => (
+                  <KeywordTag
+                    key={keyword}
+                    keyword={keyword}
+                    onRemove={removeKeyword}
+                  />
+                ))}
+              </div>
             </div>
           )}
           {searchType === "title" && <p>{messages?.title}</p>}
@@ -71,6 +91,14 @@ const ChatBoard: React.FC<ChatBoardProps> = ({ messages, searchType }) => {
               ))}
           </div>
         </div>
+      </div>
+      <div className="flex justify-end">
+        <button
+          onClick={handlePreferedData}
+          className="w-fit px-10 py-2 text-white bg-black rounded-full hover:bg-gray-900 focus:outline-none"
+        >
+          Press to use content
+        </button>
       </div>
     </div>
   );

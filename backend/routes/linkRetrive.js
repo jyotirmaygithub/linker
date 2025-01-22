@@ -23,4 +23,25 @@ router.get(
     }
 );
 
+router.get("/singleLink/:id", async (req, res) => {
+    try {
+        // Extract the ID from the request parameters
+        const { id } = req.params;
+        console.log("id link =",id)
+
+        // Find the link by its ObjectId
+        const link = await Link.findById(id);
+        if (!link) {
+            return res.status(404).json({ message: "Link not found" });
+        }
+
+        // Respond with the link data
+        res.json({ link });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal server error occurred");
+    }
+});
+
+
 module.exports = router;

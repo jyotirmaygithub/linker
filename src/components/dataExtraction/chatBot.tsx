@@ -14,7 +14,7 @@ const ChatBot: React.FC = () => {
   const [query, setQuery] = useState("");
   const [searchType, setSearchType] = useState("whole");
   const [response, setResponse] = useState<responseType | null>(null);
-  const [disabled, setDisabled] = useState(true);
+  const [disabled, setDisabled] = useState(false);
 
   // Reference to the textarea
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -100,7 +100,7 @@ const ChatBot: React.FC = () => {
             <button
             disabled={disabled}
               onClick={handleChatBot}
-              className={`absolute right-4 bottom-0.5 p-1.5 rounded-full focus:outline-none bg-black`}
+              className={`flex justify-center absolute right-5 bottom-[3px] p-1.5 rounded-full focus:outline-none bg-black`}
             >
               {disabled ? <Loader loaderColor={"white"} loaderSize={20}/> : <svg
                 xmlns="http://www.w3.org/2000/svg"

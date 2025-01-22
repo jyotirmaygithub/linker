@@ -55,4 +55,21 @@ router.post(
   }
 );
 
+
+router.put('/clickUrl/:id', async (req, res) => {
+  let { id } = req.params
+  const link = await Link.findById(id);
+  console.log("link find one = ", link);
+  if (link) {
+    link.clickCount++;
+    await link.save();
+    res.status(200).json({
+      message: "Click count updated"
+    });
+  } else {
+    res.status(404).send('Link not found');
+  }
+});
+
+
 module.exports = router;

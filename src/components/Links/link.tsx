@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Loader from "../../utils/loader/loading";
+import LinkUi from "./linkUi"
 
 export default function Link() {
   const [loading, setLoading] = useState(false);
@@ -42,12 +43,17 @@ export default function Link() {
   };
 
   return (
-    <div>
+    <div>  
       {linkData.length === 0 && (
         <div className="flex justify-center items-center h-screen w-full">
           {<Loader loaderColor={"black"} loaderSize={60} />}
         </div>
       )}
+      {
+        linkData.length > 0 && linkData.map((link)=>{
+          return (<LinkUi links={link}/>)
+        })
+      }
     </div>
   );
 }
