@@ -1,23 +1,22 @@
 // src/components/SearchBar.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import * as cheerio from "cheerio"; // To parse HTML content
 
 
 interface ExtractDataProps {
-    Url: string;
-    fetchMetadata: Function;
+  validatedUrl: string;
   }
 
-const ExtractData: React.FC<ExtractDataProps> = ({Url}) => {
-  const [query, setQuery] = useState("");
+const ExtractData: React.FC<ExtractDataProps> = ({validatedUrl}) => {
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value);
-  };
+  useEffect(()=>{
+    fetchMetadata(validatedUrl);
+  },[validatedUrl])
 
   const fetchMetadata = async (url: string) => {
+    console.log("new url =",url);
     try {
       const response = await axios.get(url, {
         headers: {
@@ -32,6 +31,7 @@ const ExtractData: React.FC<ExtractDataProps> = ({Url}) => {
       const description = $('meta[name="description"]').attr("content") || "";
       const keywords = $('meta[name="keywords"]').attr("content") || "";
 
+      console.log("title and description =", title ," and  ", description);
       return { title, description, keywords };
     } catch (error) {
       toast.error("Error fetching metadata. Please check the URL.");
@@ -40,17 +40,17 @@ const ExtractData: React.FC<ExtractDataProps> = ({Url}) => {
     }
   };
 
-  const handleLink = async (event: React.FormEvent) => {
-    event.preventDefault();
+  // const handleLink = async (event: React.FormEvent) => {
+  //   event.preventDefault();
 
-    try {
-      const metadata = await fetchMetadata(query);
-      console.log("Fetched Metadata:", metadata);
-      // Implement your logic to use the fetched metadata (title, description, keywords)
-    } catch (error) {
-      // Handle any errors that might occur during the fetching
-    }
-  };
+  //   try {
+  //     const metadata = await fetchMetadata(query);
+  //     console.log("Fetched Metadata:", metadata);
+  //     // Implement your logic to use the fetched metadata (title, description, keywords)
+  //   } catch (error) {
+  //     // Handle any errors that might occur during the fetching
+  //   }
+  // };
 
   return <div className="flex justify-center items-center w-full mt-10"></div>;
 };
