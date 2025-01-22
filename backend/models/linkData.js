@@ -30,6 +30,10 @@ const linkData = new Schema({
         type: [],
         required: true,
     },
+    clickCount:{
+        type: Number,
+        default: 1,
+    }
 });
 const Link = mongoose.model("link", linkData);
 module.exports = Link;

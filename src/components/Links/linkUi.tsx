@@ -3,13 +3,16 @@ import { Link } from "react-router-dom";
 import PostedDate from "./utils/postedDate";
 import Keyword from "./utils/keywords";
 import LinkId from "./utils/linkId";
-import { link } from "fs";
+import Views from "./utils/views";
+import PostedBy from "./utils/postedBy";
 
 interface Link {
   title: string;
   keywords: string[];
   content: string;
   _id: string; // Unique identifier for navigation
+  clickCount: number;
+  linkerName: string;
   linkUploadedDate: string;
 }
 
@@ -37,8 +40,12 @@ const LinkUi: React.FC<LinkData> = ({ links }) => {
             )}
           </p>
           <Keyword keywords={links?.keywords} />
+          <div className="flex justify-end items-center space-x-4">
+            <PostedDate date={links?.linkUploadedDate} />
+            <Views views={links?.clickCount} />
+            <PostedBy name={links?.linkerName} />
+          </div>
         </div>
-        <PostedDate date={links?.linkUploadedDate} />
       </div>
     </div>
   );
