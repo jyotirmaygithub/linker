@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Keywords from "../components/Links/utils/keywords";
 import Loader from "../utils/loader/loading";
+import CommentBox from "../components/comment/box";
+import Stepper from "../components/stepper/steps";
 import axios from "axios";
 
 interface Link {
@@ -46,13 +48,22 @@ const LinkDetails: React.FC = () => {
         </div>
       )}
       {link ? (
-        <div className="px-32 py-3">
-          <div className="space-y-4">
-            <div className="border p-4 rounded shadow-sm bg-gray-50">
-              <h2 className="text-xl font-semibold">{link?.title}</h2>
-              <p className="text-gray-800 mt-2">{link?.content}</p>
-              <Keywords keywords={link?.keywords} />
+        <div className="flex">
+          <div className="px-32 py-3">
+            <div className="space-y-4">
+              <div className="p-4">
+                <h2 className="text-xl font-semibold">{link?.title}</h2>
+                <p className="text-gray-800 mt-2">{link?.content}</p>
+                <Keywords keywords={link?.keywords} />
+              </div>
             </div>
+            <hr className="border-t-4 border-gray-200 p-2" />
+            <div>
+              <CommentBox />
+            </div>
+          </div>
+          <div className="px-32 py-3">
+            <Stepper />
           </div>
         </div>
       ) : (
