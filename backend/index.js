@@ -18,6 +18,8 @@ app.use("/api/dataScrape", require("./routes/dataScrape"));
 app.use("/api/linkStore", require("./routes/linkStore"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/chatBot", require("./routes/chatBot"));
+app.use("/api/user", require("./routes/user"));
+app.use("/api/comment", require("./routes/comment"));
 app.use("/api/linkRetrive", require("./routes/linkRetrive"));
 
 app.listen(port, () => {
