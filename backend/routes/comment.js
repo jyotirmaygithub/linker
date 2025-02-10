@@ -46,4 +46,28 @@ router.post("/comment-data", fetchUserId, async (req, res) => {
     }
 });
 
+router.get("/link-comments/:id", async (req, res) => {
+    console.log("Function called");
+
+    const { id } = req.params;
+    console.log("link_id =", id);
+
+    if (!id) {
+        return res.status(400).json({ message: "Link ID is required" });
+    }
+
+    try {
+        // Find comments associated with the link_id
+        const comments = await Comment.find({ link_id: id });
+        console.log("comments =", comments);
+
+        return res.status(200).json(comments); // Send back the comments
+
+    } catch (error) {
+        console.error("Error fetching comments:", error.message);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+
 module.exports = router;
