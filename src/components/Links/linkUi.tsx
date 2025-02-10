@@ -4,7 +4,7 @@ import PostedDate from "./utils/postedDate";
 import Keyword from "./utils/keywords";
 import LinkId from "./utils/linkId";
 import Views from "./utils/views";
-import PostedBy from "./utils/postedBy";
+import PostedBy from "./utils/avatar";
 
 interface Link {
   title: string;

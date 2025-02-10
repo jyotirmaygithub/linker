@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Keywords from "../components/Links/utils/keywords";
 import Loader from "../utils/loader/loading";
 import CommentBox from "../components/comment/box";
+import Comments from "../components/comment/comments/comment";
 import Stepper from "../components/stepper/steps";
 import axios from "axios";
 
@@ -49,7 +50,7 @@ const LinkDetails: React.FC = () => {
       )}
       {link ? (
         <div className="flex">
-          <div className="px-32 py-3">
+          <div className="px-20 py-3">
             <div className="space-y-4">
               <div className="p-4">
                 <h2 className="text-xl font-semibold">{link?.title}</h2>
@@ -58,11 +59,12 @@ const LinkDetails: React.FC = () => {
               </div>
             </div>
             <hr className="border-t-4 border-gray-200 p-2" />
-            <div>
+            <div className="space-y-4">
               <CommentBox />
+              <Comments />
             </div>
           </div>
-          <div className="px-32 py-3">
+          <div className="px-20 py-3 ">
             <Stepper />
           </div>
         </div>

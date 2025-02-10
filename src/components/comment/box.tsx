@@ -13,9 +13,8 @@ const CommentBox = () => {
   console.log("link_id = ", id);
 
   const handleSubmit = () => {
-    if (comment.trim()) {
-      const token = getAuthToken();
-
+    const token = getAuthToken();
+    if (comment && token) {
       axios
         .post(
           `${process.env.REACT_APP_DEV_URL}/api/comment/comment-data`,
@@ -34,11 +33,11 @@ const CommentBox = () => {
           toast.success("Comment submitted successfully!");
           setComment("");
         })
-        .catch((error) => console.error("Error:", error));
-
-      // setComment(""); // Clear the input after submission
-    } else {
+        .catch((error) => console.error("Error:", error))
+    } else if(!token) {
       navigation("/login");
+    }else{
+      toast.error("Please write a comment!");
     }
   };
 

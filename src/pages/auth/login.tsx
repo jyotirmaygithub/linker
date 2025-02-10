@@ -55,6 +55,7 @@ export default function LogIn() {
         setLoading(false);
         toast.success("Login successful");
         dispatch(storeAuthToken(response.data.auth_token))
+        navigation("/");
         console.log(response.data.auth_token);
       })
       .catch((error) => {

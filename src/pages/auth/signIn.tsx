@@ -62,6 +62,7 @@ export default function SignIn() {
         setLoading(false)
         toast.success("Sign In successful");
          dispatch(storeAuthToken(response.data.auth_token))
+         navigation("/");
         console.log(response.data);
       })
       .catch((error) => {
