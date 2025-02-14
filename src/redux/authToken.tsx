@@ -15,12 +15,13 @@ const authTokenSlice = createSlice({
   initialState,
   reducers: {
     storeAuthToken: (state, action: PayloadAction<string>) => {
+      console.log("action to payload =",action.payload);
       const token = action.payload;
-      sessionStorage.setItem("authToken", token); // Save token in session storage
+      localStorage.setItem("authToken", token); // Save token in session storage
       state.token = token; // Update the Redux state
     },
     clearAuthToken: (state) => {
-      sessionStorage.removeItem("authToken"); // Remove token from session storage
+      localStorage.removeItem("authToken"); // Remove token from session storage
       state.token = null; // Clear the Redux state
     },
   },
@@ -38,5 +39,5 @@ export const selectAuthToken = (state: { authToken: AuthState }) =>
 
 // Utility function to retrieve the token from session storage
 export const getAuthToken = (): string | null => {
-  return sessionStorage.getItem("authToken");
+  return localStorage.getItem("authToken");
 };
