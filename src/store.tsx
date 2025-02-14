@@ -2,11 +2,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import gptSelectionReducer from './redux/gptSelectionSlice';
 import AuthToken  from "./redux/authToken"
+import UserData from "./redux/userData";
 
 const store = configureStore({
   reducer: {
     user: gptSelectionReducer,
-    authToken: AuthToken
+    authToken: AuthToken,
+    userData: UserData
   },
 });
 
