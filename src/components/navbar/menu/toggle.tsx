@@ -30,18 +30,19 @@ export default function RightSideDrawer() {
       ) {
         return;
       }
-
       setIsOpen(open);
     };
 
-  // Handle Logout Click
-  const handleLogout = () => {
-    navigate("/")
-    toast.success("Logged out successfully. See you again soon!");
-    dispatch(clearAuthToken())
-    dispatch(clearUserData())
-    // 
-    console.log("User clicked on Logout");
+  // Common navigation handler
+  const handleNavigation = (route: string) => {
+    if (route === '/logout') {
+      dispatch(clearAuthToken());
+      dispatch(clearUserData());
+      toast.success("Logged out successfully. See you again soon!");
+      navigate('/');
+    } else {
+      navigate(route);
+    }
   };
 
   const drawerList = () => (
@@ -52,13 +53,13 @@ export default function RightSideDrawer() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        {['Your links', 'Upload links'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
+        {[{ text: 'Upload Link', route: '/uploadLink' }, { text: 'Uploaded Links', route: '/UploadedLinks' }].map((item, index) => (
+          <ListItem key={item.text} disablePadding>
+            <ListItemButton onClick={() => handleNavigation(item.route)}>
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={item.text} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -66,7 +67,7 @@ export default function RightSideDrawer() {
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton onClick={() => handleNavigation('/contact-us')}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -76,7 +77,7 @@ export default function RightSideDrawer() {
 
         {/* Logout Button */}
         <ListItem disablePadding>
-          <ListItemButton onClick={handleLogout}>
+          <ListItemButton onClick={() => handleNavigation('/logout')}>
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>
