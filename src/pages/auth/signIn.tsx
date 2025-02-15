@@ -19,6 +19,7 @@ import Copyright from "../../utils/copyright";
 import { storeAuthToken } from "../../redux/authToken";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import CustomTextField from "../../utils/CustomTextField";
 
 
 const style = {
@@ -154,16 +155,29 @@ export default function SignIn() {
               onChange={handleUsernameChange}
               onInput={handleInputChange}
               error={!isValidName && username !== ""}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&.Mui-focused fieldset": {
+                    borderColor: "gray", // Change the outline color to gray when focused
+                  },
+                  "& input, & textarea": {
+                    color: "gray", // Change the text color to gray
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "gray", // Change the label color to gray
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "gray", // Change the label color to gray when focused
+                },}}
               helperText={
                 !isValidName && username !== ""
                   ? "Name must be between 4 and 20 characters."
                   : ""
               }
             />
-            <TextField
-              label="Email"
-              variant="outlined"
-              fullWidth
+            <CustomTextField
+              label={"Email"}
               value={emailId}
               onChange={handleEmailChange}
               error={!isValidEmail && emailId !== ""}
@@ -184,6 +198,21 @@ export default function SignIn() {
                   ? "Must include 8+ characters, a capital letter, a number, and a special character."
                   : ""
               }
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&.Mui-focused fieldset": {
+                    borderColor: "gray", // Change the outline color to gray when focused
+                  },
+                  "& input, & textarea": {
+                    color: "gray", // Change the text color to gray
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "gray", // Change the label color to gray
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "gray", // Change the label color to gray when focused
+                },}}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -211,6 +240,21 @@ export default function SignIn() {
                   ? "Passwords do not match."
                   : ""
               }
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&.Mui-focused fieldset": {
+                    borderColor: "gray", // Change the outline color to gray when focused
+                  },
+                  "& input, & textarea": {
+                    color: "gray", // Change the text color to gray
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "gray", // Change the label color to gray
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "gray", // Change the label color to gray when focused
+                },}}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import CustomTextField from "../../utils/CustomTextField";
 
 const CommentBox = () => {
   const [comment, setComment] = useState("");
@@ -44,14 +45,14 @@ const CommentBox = () => {
   return (
     <>
       <div className="space-y-2">
-        <TextField
-          fullWidth
+        <CustomTextField
           multiline
           rows={4}
-          variant="outlined"
-          label="Write your comment here..."
+          label={"Write your comment here..."}
           value={comment}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setComment(e.target.value)}
+          error={false}
+          helperText={""}
         />
         <button
           onClick={handleSubmit}

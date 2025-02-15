@@ -19,7 +19,7 @@ import Copyright from "../../utils/copyright";
 import { getAuthToken, storeAuthToken } from "../../redux/authToken";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
+import CustomTextField from "../../utils/CustomTextField";
 
 const style = {
   position: "absolute",
@@ -54,7 +54,7 @@ export default function LogIn() {
       .then((response) => {
         setLoading(false);
         toast.success("Login successful");
-        dispatch(storeAuthToken(response.data.auth_token))
+        dispatch(storeAuthToken(response.data.auth_token));
         navigation("/");
         console.log(response.data.auth_token);
       })
@@ -108,89 +108,109 @@ export default function LogIn() {
 
   return (
     <>
-        <Box sx={style}>
-          <div className="flex justify-center">
-            <Avatar sx={{ m: 1, bgcolor: "#000000" }}>
-              <LockOpenIcon />
-            </Avatar>
-          </div>
-          <div className="space-y-5">
-            <Typography variant="h5" component="h3" className="text-center">
-              Login your Account!
-            </Typography>
-            <TextField
-              label="Email"
-              variant="outlined"
-              fullWidth
-              value={emailId}
-              onChange={handleEmailChange}
-              error={!isValidEmail && emailId !== ""}
-              helperText={
-                !isValidEmail && emailId !== ""
-                  ? "Please enter a valid email address."
-                  : ""
-              }
-            />
-            <TextField
-              label="Password"
-              variant="outlined"
-              type={showPassword ? "text" : "password"}
-              fullWidth
-              error={!isValidPassword && password !== ""}
-              helperText={
-                !isValidPassword && password !== ""
-                  ? "Must include 8+ characters, a capital letter, a number, and a special character."
-                  : ""
-              }
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton edge="end" onClick={handleShowPasswordClick}>
-                      {showPassword ? (
-                        <VisibilityOff sx={{ fontSize: 30 }} />
-                      ) : (
-                        <Visibility sx={{ fontSize: 30 }} />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              value={password}
-              onChange={handlePasswordChange}
-            />
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{
-                my: 3,
-                bgcolor: "#000000",
-                borderRadius: "20px",
-                "&:hover": {
-                  bgcolor: "#454943",
+      <Box sx={style}>
+        <div className="flex justify-center">
+          <Avatar sx={{ m: 1, bgcolor: "#000000" }}>
+            <LockOpenIcon />
+          </Avatar>
+        </div>
+        <div className="space-y-5">
+          <Typography variant="h5" component="h3" className="text-center">
+            Login your Account!
+          </Typography>
+          <CustomTextField
+            label={"Email"}
+            value={emailId}
+            onChange={handleEmailChange}
+            error={!isValidEmail && emailId !== ""}
+            helperText={
+              !isValidEmail && emailId !== ""
+                ? "Please enter a valid email address."
+                : ""
+            }
+            multiline={false}
+            rows={1}
+          />
+          <TextField
+            label="Password"
+            variant="outlined"
+            type={showPassword ? "text" : "password"}
+            fullWidth
+            error={!isValidPassword && password !== ""}
+            helperText={
+              !isValidPassword && password !== ""
+                ? "Must include 8+ characters, a capital letter, a number, and a special character."
+                : ""
+            }
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&.Mui-focused fieldset": {
+                  borderColor: "gray", // Change the outline color to gray when focused
                 },
-              }}
-              type="submit"
-              onClick={handleLogIn}
-              disabled={isSignInDisabled || loading}
-            >
-              Log In
-              {loading && <Loader loaderColor={"white"} loaderSize={30} />}
-            </Button>
-            <div className="space-y-1">
-              <Typography className="flex justify-end space-x-2">
-                <p>Don't have an account?</p>
-                <p className="text-primary no-underline hover:underline cursor-pointer" onClick={()=> navigation("/signin")}>
-                  Sign up now
-                </p>
-              </Typography>
-              <Typography className="flex justify-end">
-                <p className="hover:underline cursor-pointer">Forgot your password?</p>
-              </Typography>
-            </div>
-            <Copyright />
+                "& input, & textarea": {
+                  color: "gray", // Change the text color to gray
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "gray", // Change the label color to gray
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "gray", // Change the label color to gray when focused
+              },
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton edge="end" onClick={handleShowPasswordClick}>
+                    {showPassword ? (
+                      <VisibilityOff sx={{ fontSize: 30 }} />
+                    ) : (
+                      <Visibility sx={{ fontSize: 30 }} />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            value={password}
+            onChange={handlePasswordChange}
+          />
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{
+              my: 3,
+              bgcolor: "#000000",
+              borderRadius: "20px",
+              "&:hover": {
+                bgcolor: "#454943",
+              },
+            }}
+            type="submit"
+            onClick={handleLogIn}
+            disabled={isSignInDisabled || loading}
+          >
+            Log In
+            {loading && <Loader loaderColor={"white"} loaderSize={30} />}
+          </Button>
+          <div className="space-y-1">
+            <Typography className="flex justify-end space-x-2">
+              <p>Don't have an account?</p>
+              <p
+                className="text-primary no-underline hover:underline cursor-pointer"
+                onClick={() => navigation("/signin")}
+              >
+                Sign up now
+              </p>
+            </Typography>
+            <Typography className="flex justify-end">
+              <p className="hover:underline cursor-pointer">
+                Forgot your password?
+              </p>
+            </Typography>
           </div>
-        </Box>
+          <Copyright />
+        </div>
+      </Box>
     </>
   );
 }
-
