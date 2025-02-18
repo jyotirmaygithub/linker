@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import CustomeLine from "../../../utils/line";
 import UserComment from "./userComment";
 
 interface Comment {
@@ -34,7 +35,7 @@ const CommentBox = () => {
       {comments.length > 0 ? (
         comments.map((comment, index) => (
           <div key={index}>
-            <hr className="border-t-4 border-gray-200 p-2"></hr>
+           <CustomeLine/>
             <UserComment
               name={comment.commenterName}
               avatarUrl={comment.avatar}

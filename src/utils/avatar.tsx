@@ -2,8 +2,8 @@ import React from "react";
 import Avatar from "@mui/material/Avatar";
 
 interface PostedByProps {
-  name?: string;
-  size?: number;
+  name: string | null;
+  size: number | null;
 }
 
 // Define a color for each letter (A-Z)

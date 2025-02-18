@@ -6,7 +6,7 @@ import {
   Typography,
   CardContent,
 } from "@mui/material";
-import CommenterAvatar from "../../Links/utils/avatar";
+import CommenterAvatar from "../../../utils/avatar";
 
 export interface CommentProps {
   index: number;
@@ -25,7 +25,7 @@ const Comment: React.FC<CommentProps> = ({
     <div className="border-gray-400 border-2" key={index}>
       <CardHeader
         avatar={
-          <CommenterAvatar name={name}/>
+          <CommenterAvatar name={name} size={30}/>
         }
         title={
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>

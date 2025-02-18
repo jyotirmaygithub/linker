@@ -4,7 +4,7 @@ import PostedDate from "./utils/postedDate";
 import Keyword from "./utils/keywords";
 import LinkId from "./utils/linkId";
 import Views from "./utils/views";
-import PostedBy from "./utils/avatar";
+import PostedBy from "../../utils/avatar";
 
 interface Link {
   title: string;
@@ -34,16 +34,16 @@ const LinkUi: React.FC<LinkData> = ({ links }) => {
         <div className="border p-4 rounded shadow-sm bg-gray-50">
           <h2 className="text-xl font-semibold">{links?.title}</h2>
           <p className="text-gray-800 mt-2">
-            {truncateText(links?.content || "", 80)}
-            {links && links.content.split(" ").length > 50 && (
-              <LinkId Id={links?._id} />
-            )}
+            {/* {truncateText(links?.content || "", 80)} */}
+            {/* {links && links.content.split(" ").length > 50 && ( */}
+              <LinkId Id={links && links._id} Content={links && links.content} />
+            {/* )} */}
           </p>
           <Keyword keywords={links?.keywords} />
           <div className="flex justify-end items-center space-x-4">
             <PostedDate date={links?.linkUploadedDate} />
             <Views views={links?.clickCount} />
-            <PostedBy name={links?.linkerName} />
+            <PostedBy name={links && links.linkerName} size={28}/>
           </div>
         </div>
       </div>

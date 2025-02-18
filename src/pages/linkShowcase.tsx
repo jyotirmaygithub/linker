@@ -5,7 +5,12 @@ import Loader from "../utils/loader/loading";
 import CommentBox from "../components/comment/box";
 import Comments from "../components/comment/comments/comment";
 import Stepper from "../components/stepper/steps";
+import CustomAvatar from "../utils/avatar";
+import CustomLine from "../utils/line";
+
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store";
 
 interface Link {
   title: string;
@@ -18,6 +23,9 @@ const LinkDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Extract the id from URL parameters
   const [link, setLink] = useState<Link | null>(null); // State to hold the fetched link
   const [loading, setLoading] = useState(false); // Loading state
+  const user = useSelector((state: RootState) => state.userData);
+
+  console.log("ehy userdata = ", user);
 
   useEffect(() => {
     const fetchLinkDetails = async () => {
@@ -30,6 +38,7 @@ const LinkDetails: React.FC = () => {
           .then((response) => {
             console.log("link response = ", response);
             setLink(response.data.link); // Set the fetched data into the state
+
             setLoading(false); // Set loading to false after fetching
           });
       } catch (error) {
@@ -39,6 +48,28 @@ const LinkDetails: React.FC = () => {
     };
 
     fetchLinkDetails();
+
+    const fetchLinkUserDetails = async () => {
+      setLoading(true);
+      try {
+        console.log("id = ", id);
+        // Send GET request to fetch the link details by id
+        axios
+          .get(`http://localhost:5000/api/user/link-userData/${id}`)
+          .then((response) => {
+            console.log("link response = ", response);
+            setLink(response.data.link); // Set the fetched data into the state
+
+            setLoading(false); // Set loading to false after fetching
+          });
+      } catch (error) {
+        console.error("Error fetching link details: ", error);
+        setLoading(false);
+      }
+    };
+
+    fetchLinkDetails();
+    fetchLinkUserDetails();
   }, [id]); // Only re-run when `id` changes
 
   return (
@@ -53,12 +84,21 @@ const LinkDetails: React.FC = () => {
           <div className="px-20 py-3">
             <div className="space-y-4">
               <div className="p-4">
-                <h2 className="text-xl font-semibold">{link?.title}</h2>
-                <p className="text-gray-800 mt-2">{link?.content}</p>
+                <div className="space-y-3">
+                  <h2 className="text-3xl font-semibold">{link?.title}</h2>
+                  <CustomLine />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <CustomAvatar name={user && user.username} size={34} />
+                  <p className="text-lg text-gray-400">
+                    {user && user.username}
+                  </p>
+                </div>
+                <p className=" text-gray-800 mt-2">{link?.content}</p>
                 <Keywords keywords={link?.keywords} />
               </div>
             </div>
-            <hr className="border-t-4 border-gray-200 p-2" />
+            <CustomLine />
             <div className="space-y-4">
               <CommentBox />
               <Comments />

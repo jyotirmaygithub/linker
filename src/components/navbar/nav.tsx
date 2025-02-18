@@ -4,7 +4,7 @@ import SearchLogo from "./search/searchLogo";
 import Login from "./auth/login";
 import SignIn from "./auth/signIn";
 import Toggle from "./menu/toggle";
-import UserAvatar from "../Links/utils/avatar";
+import UserAvatar from "../../utils/avatar";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 
