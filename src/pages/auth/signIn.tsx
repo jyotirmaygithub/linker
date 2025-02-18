@@ -21,33 +21,31 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CustomTextField from "../../utils/CustomTextField";
 
-
 const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    p: 4,
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  p: 4,
 };
 
 export default function SignIn() {
-    const [username, setUsername] = useState("");
-    const [emailId, setEmailId] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setConfirmShowPassword] = useState(false);
-    const [isValidName, setIsValidName] = useState(true);
-    const [isValidEmail, setIsValidEmail] = useState(true);
-    const [isValidPassword, setIsValidPassword] = useState(true);
-    const [isValidConfirmPassword, setIsValidConfirmPassword] = useState(true);
-    const [loading, setLoading] = useState(false);
-    const dispatch = useDispatch();
-    const navigation = useNavigate();
-    
-    
+  const [username, setUsername] = useState("");
+  const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setConfirmShowPassword] = useState(false);
+  const [isValidName, setIsValidName] = useState(true);
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isValidPassword, setIsValidPassword] = useState(true);
+  const [isValidConfirmPassword, setIsValidConfirmPassword] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigation = useNavigate();
+
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -60,14 +58,14 @@ export default function SignIn() {
         password,
       })
       .then((response) => {
-        setLoading(false)
+        setLoading(false);
         toast.success("Sign In successful");
-         dispatch(storeAuthToken(response.data.auth_token))
-         navigation("/");
+        dispatch(storeAuthToken(response.data.auth_token));
+        navigation("/");
         console.log(response.data);
       })
       .catch((error) => {
-        setLoading(false)
+        setLoading(false);
         if (error.response) {
           const serverMessage = error.response.data.message;
           toast.error(serverMessage || "An unknown error occurred.");
@@ -133,172 +131,187 @@ export default function SignIn() {
     setConfirmShowPassword(!showConfirmPassword);
   };
 
-  let isSignInDisabled = !(username && emailId && password && confirmPassword && isValidName && isValidEmail && isValidPassword && isValidConfirmPassword);
+  let isSignInDisabled = !(
+    username &&
+    emailId &&
+    password &&
+    confirmPassword &&
+    isValidName &&
+    isValidEmail &&
+    isValidPassword &&
+    isValidConfirmPassword
+  );
 
   return (
     <>
-        <Box sx={style}>
-          <div className="flex justify-center">
-            <Avatar sx={{ m: 1, bgcolor: "#000000" }}>
-              <LockOpenIcon />
-            </Avatar>
-          </div>
-          <div className="space-y-5">
-            <Typography variant="h5" component="h3" className="text-center">
-              Sign Up for an Account!
-            </Typography>
-            <TextField
-              label="Username"
-              variant="outlined"
-              fullWidth
-              value={username}
-              onChange={handleUsernameChange}
-              onInput={handleInputChange}
-              error={!isValidName && username !== ""}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "&.Mui-focused fieldset": {
-                    borderColor: "gray", // Change the outline color to gray when focused
-                  },
-                  "& input, & textarea": {
-                    color: "gray", // Change the text color to gray
-                  },
+      <Box sx={style}>
+        <div className="flex justify-center">
+          <Avatar sx={{ m: 1, bgcolor: "#000000" }}>
+            <LockOpenIcon />
+          </Avatar>
+        </div>
+        <div className="space-y-5">
+          <Typography variant="h5" component="h3" className="text-center">
+            Sign Up for an Account!
+          </Typography>
+          <TextField
+            label="Username"
+            variant="outlined"
+            fullWidth
+            value={username}
+            onChange={handleUsernameChange}
+            onInput={handleInputChange}
+            error={!isValidName && username !== ""}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&.Mui-focused fieldset": {
+                  borderColor: "gray", // Change the outline color to gray when focused
                 },
-                "& .MuiInputLabel-root": {
-                  color: "gray", // Change the label color to gray
+                "& input, & textarea": {
+                  color: "gray", // Change the text color to gray
                 },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "gray", // Change the label color to gray when focused
-                },}}
-              helperText={
-                !isValidName && username !== ""
-                  ? "Name must be between 4 and 20 characters."
-                  : ""
-              }
-            />
-            <CustomTextField
-              label={"Email"}
-              value={emailId}
-              onChange={handleEmailChange}
-              error={!isValidEmail && emailId !== ""}
-              helperText={
-                !isValidEmail && emailId !== ""
-                  ? "Please enter a valid email address."
-                  : ""
-              }
-            />
-            <TextField
-              label="Password"
-              variant="outlined"
-              type={showPassword ? "text" : "password"}
-              fullWidth
-              error={!isValidPassword && password !== ""}
-              helperText={
-                !isValidPassword && password !== ""
-                  ? "Must include 8+ characters, a capital letter, a number, and a special character."
-                  : ""
-              }
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "&.Mui-focused fieldset": {
-                    borderColor: "gray", // Change the outline color to gray when focused
-                  },
-                  "& input, & textarea": {
-                    color: "gray", // Change the text color to gray
-                  },
+              },
+              "& .MuiInputLabel-root": {
+                color: "gray", // Change the label color to gray
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "gray", // Change the label color to gray when focused
+              },
+            }}
+            helperText={
+              !isValidName && username !== ""
+                ? "Name must be between 4 and 20 characters."
+                : ""
+            }
+          />
+          <CustomTextField
+            label={"Email"}
+            value={emailId}
+            onChange={handleEmailChange}
+            error={!isValidEmail && emailId !== ""}
+            helperText={
+              !isValidEmail && emailId !== ""
+                ? "Please enter a valid email address."
+                : ""
+            }
+          />
+          <TextField
+            label="Password"
+            variant="outlined"
+            type={showPassword ? "text" : "password"}
+            fullWidth
+            error={!isValidPassword && password !== ""}
+            helperText={
+              !isValidPassword && password !== ""
+                ? "Must include 8+ characters, a capital letter, a number, and a special character."
+                : ""
+            }
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&.Mui-focused fieldset": {
+                  borderColor: "gray", // Change the outline color to gray when focused
                 },
-                "& .MuiInputLabel-root": {
-                  color: "gray", // Change the label color to gray
+                "& input, & textarea": {
+                  color: "gray", // Change the text color to gray
                 },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "gray", // Change the label color to gray when focused
-                },}}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton edge="end" onClick={handleShowPasswordClick}>
-                      {showPassword ? (
-                        <VisibilityOff sx={{ fontSize: 30 }} />
-                      ) : (
-                        <Visibility sx={{ fontSize: 30 }} />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              value={password}
-              onChange={handlePasswordChange}
-            />
-            <TextField
-              label="Confirm Password"
-              variant="outlined"
-              type={showConfirmPassword ? "text" : "password"}
-              fullWidth
-              error={!isValidConfirmPassword && confirmPassword !== ""}
-              helperText={
-                !isValidConfirmPassword && confirmPassword !== ""
-                  ? "Passwords do not match."
-                  : ""
-              }
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "&.Mui-focused fieldset": {
-                    borderColor: "gray", // Change the outline color to gray when focused
-                  },
-                  "& input, & textarea": {
-                    color: "gray", // Change the text color to gray
-                  },
+              },
+              "& .MuiInputLabel-root": {
+                color: "gray", // Change the label color to gray
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "gray", // Change the label color to gray when focused
+              },
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton edge="end" onClick={handleShowPasswordClick}>
+                    {showPassword ? (
+                      <VisibilityOff sx={{ fontSize: 30 }} />
+                    ) : (
+                      <Visibility sx={{ fontSize: 30 }} />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            value={password}
+            onChange={handlePasswordChange}
+          />
+          <TextField
+            label="Confirm Password"
+            variant="outlined"
+            type={showConfirmPassword ? "text" : "password"}
+            fullWidth
+            error={!isValidConfirmPassword && confirmPassword !== ""}
+            helperText={
+              !isValidConfirmPassword && confirmPassword !== ""
+                ? "Passwords do not match."
+                : ""
+            }
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&.Mui-focused fieldset": {
+                  borderColor: "gray", // Change the outline color to gray when focused
                 },
-                "& .MuiInputLabel-root": {
-                  color: "gray", // Change the label color to gray
+                "& input, & textarea": {
+                  color: "gray", // Change the text color to gray
                 },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "gray", // Change the label color to gray when focused
-                },}}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton edge="end" onClick={handleShowConfirmPassword}>
-                      {showConfirmPassword ? (
-                        <VisibilityOff sx={{ fontSize: 30 }} />
-                      ) : (
-                        <Visibility sx={{ fontSize: 30 }} />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
-            />
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{
-                my: 3,
-                bgcolor: "#000000",
-                borderRadius: "20px",
-                "&:hover": {
-                  bgcolor: "#454943",
-                },
-              }}
-              type="submit"
-              onClick={handleSignIn}
-              disabled={isSignInDisabled || loading}
-            >
-              Sign In
-              {loading && <Loader loaderColor={"white"}  loaderSize={30} />}
-            </Button>
+              },
+              "& .MuiInputLabel-root": {
+                color: "gray", // Change the label color to gray
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "gray", // Change the label color to gray when focused
+              },
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton edge="end" onClick={handleShowConfirmPassword}>
+                    {showConfirmPassword ? (
+                      <VisibilityOff sx={{ fontSize: 30 }} />
+                    ) : (
+                      <Visibility sx={{ fontSize: 30 }} />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            value={confirmPassword}
+            onChange={handleConfirmPasswordChange}
+          />
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{
+              my: 3,
+              bgcolor: "#000000",
+              borderRadius: "20px",
+              "&:hover": {
+                bgcolor: "#454943",
+              },
+            }}
+            type="submit"
+            onClick={handleSignIn}
+            disabled={isSignInDisabled || loading}
+          >
+            Sign In
+            {loading && <Loader loaderColor={"white"} loaderSize={30} />}
+          </Button>
 
-            <Typography className="flex justify-center space-x-2">
-              <p>Already have an account?</p>
-              <p className="text-primary no-underline hover:underline cursor-pointer" onClick={()=> navigation("/login")}>
-                Login
-              </p>
-            </Typography>
-            <Copyright />
-          </div>
-        </Box>
+          <Typography className="flex justify-center space-x-2">
+            <p>Already have an account?</p>
+            <p
+              className="text-primary no-underline hover:underline cursor-pointer"
+              onClick={() => navigation("/login")}
+            >
+              Login
+            </p>
+          </Typography>
+          <Copyright />
+        </div>
+      </Box>
     </>
   );
 }
