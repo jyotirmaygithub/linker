@@ -1,12 +1,13 @@
 const Link = require("../models/linkData");
 const express = require("express");
 const { body, validationResult } = require("express-validator");
+const fetchUserId = require("../middleware/fetchUserId");
 const router = express.Router();
 require("dotenv").config();
 
 // ROUTE 1 : Creating a new user account POST : /api/auth/createuser
 router.post(
-  "/linkStorage",
+  "/linkStorage",fetchUserId,
   // Validation middleware
   [
     body("url", "URL is required").notEmpty(),
@@ -35,6 +36,7 @@ router.post(
 
       // Create a new link
       const newLink = new Link({
+        user_id: req.userId,
         url: url,
         title: title,
         content: content,

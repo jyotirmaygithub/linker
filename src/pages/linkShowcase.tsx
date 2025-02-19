@@ -7,9 +7,8 @@ import Comments from "../components/comment/comments/comment";
 import Stepper from "../components/stepper/steps";
 import CustomAvatar from "../utils/avatar";
 import CustomLine from "../utils/line";
-
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../store";
 
 interface Link {
@@ -20,66 +19,39 @@ interface Link {
 }
 
 const LinkDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Extract the id from URL parameters
-  const [link, setLink] = useState<Link | null>(null); // State to hold the fetched link
-  const [loading, setLoading] = useState(false); // Loading state
-  const user = useSelector((state: RootState) => state.userData);
-
-  console.log("ehy userdata = ", user);
+  const { id } = useParams<{ id: string }>();
+  const [link, setLink] = useState<Link | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    const fetchLinkDetails = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        console.log("id = ", id);
-        // Send GET request to fetch the link details by id
-        axios
-          .get(`http://localhost:5000/api/linkRetrive/singleLink/${id}`)
-          .then((response) => {
-            console.log("link response = ", response);
-            setLink(response.data.link); // Set the fetched data into the state
+        console.log("Fetching data for ID:", id);
+        
+        // 🔹 Fetch both link and user data in a single request
+        const response = await axios.get(`http://localhost:5000/api/linkRetrive/link-userData/${id}`);
+        console.log("🔹 Response:", response.data);
 
-            setLoading(false); // Set loading to false after fetching
-          });
+        setLink(response.data.link);
+        setUserName(response.data.userData.username);
       } catch (error) {
-        console.error("Error fetching link details: ", error);
-        setLoading(false);
+        console.error("❌ Error fetching data:", error);
       }
+      setLoading(false);
     };
 
-    fetchLinkDetails();
-
-    const fetchLinkUserDetails = async () => {
-      setLoading(true);
-      try {
-        console.log("id = ", id);
-        // Send GET request to fetch the link details by id
-        axios
-          .get(`http://localhost:5000/api/user/link-userData/${id}`)
-          .then((response) => {
-            console.log("link response = ", response);
-            setLink(response.data.link); // Set the fetched data into the state
-
-            setLoading(false); // Set loading to false after fetching
-          });
-      } catch (error) {
-        console.error("Error fetching link details: ", error);
-        setLoading(false);
-      }
-    };
-
-    fetchLinkDetails();
-    fetchLinkUserDetails();
-  }, [id]); // Only re-run when `id` changes
+    fetchData();
+  }, [id]);
 
   return (
     <>
-      {loading && (
+      {loading ? (
         <div className="flex justify-center items-center h-screen w-full">
-          {<Loader loaderColor={"black"} loaderSize={60} />}
+          <Loader loaderColor={"black"} loaderSize={60} />
         </div>
-      )}
-      {link ? (
+      ) : link ? (
         <div className="flex">
           <div className="px-20 py-3">
             <div className="space-y-4">
@@ -89,12 +61,10 @@ const LinkDetails: React.FC = () => {
                   <CustomLine />
                 </div>
                 <div className="flex items-center space-x-2">
-                  <CustomAvatar name={user && user.username} size={34} />
-                  <p className="text-lg text-gray-400">
-                    {user && user.username}
-                  </p>
+                  <CustomAvatar name={userName} size={34} />
+                  <p className="text-lg text-gray-400">{userName}</p>
                 </div>
-                <p className=" text-gray-800 mt-2">{link?.content}</p>
+                <p className="text-gray-800 mt-2">{link?.content}</p>
                 <Keywords keywords={link?.keywords} />
               </div>
             </div>
@@ -104,7 +74,7 @@ const LinkDetails: React.FC = () => {
               <Comments />
             </div>
           </div>
-          <div className="px-20 py-3 ">
+          <div className="px-20 py-3">
             <Stepper />
           </div>
         </div>

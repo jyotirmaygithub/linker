@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import DataBox from "../Box/dataBox";
 import Loader from "../../utils/loader/loading";
+import { getAuthToken } from "../../redux/authToken";
 
 interface ExtractedData {
   title: string;
@@ -16,10 +17,10 @@ const SearchBar: React.FC = () => {
     null
   );
   const [dataLoading, setDataLoading] = useState(false);
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(event.target.value);
   };
+  const token = getAuthToken();
 
   const handleLink = (event: React.FormEvent) => {
     event.preventDefault();
@@ -46,7 +47,7 @@ const SearchBar: React.FC = () => {
 
     setDataLoading(true);
     axios
-      .post("http://localhost:5000/api/dataScrape/scrape", { url, })
+      .post("http://localhost:5000/api/dataScrape/scrape", { url })
       .then((response) => {
         const data = response.data;
         setDataLoading(false);
@@ -65,26 +66,33 @@ const SearchBar: React.FC = () => {
       });
   };
 
-  function handleSave(){
-
+  function handleSave() {
     if (!extractedData) {
       return toast.error("No data to save. Please scrape a valid link.");
     }
 
     axios
-      .post("http://localhost:5000/api/linkStore/linkStorage", {
-      url,
-      title: extractedData.title,
-      content: extractedData.content,
-      keywords: extractedData.keywords,
-    })
+      .post(
+        `${process.env.REACT_APP_DEV_URL}/api/linkStore/linkStorage`,
+        {
+          url,
+          title: extractedData.title,
+          content: extractedData.content,
+          keywords: extractedData.keywords,
+        },
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      )
       .then((response) => {
-       console.log("response from the server = ",response);
-       toast.success("Link saved successfully!");
+        console.log("✅ Response from server:", response);
+        toast.success("Link saved successfully!");
       })
       .catch((error) => {
-        console.log("server side error = ", error);
-        toast.error("Failed to save the link.",error);
+        console.error("❌ Server-side error:", error);
+        toast.error("Failed to save the link.");
       });
   }
 
@@ -112,7 +120,7 @@ const SearchBar: React.FC = () => {
       </form>
       {dataLoading && (
         <div className="my-10">
-          <Loader loaderColor={"black"} loaderSize={40}  />
+          <Loader loaderColor={"black"} loaderSize={40} />
         </div>
       )}
       {extractedData && (
@@ -124,7 +132,7 @@ const SearchBar: React.FC = () => {
       )}
       {extractedData && (
         <button
-        onClick={handleSave}
+          onClick={handleSave}
           className="w-fit px-10 py-2 text-white bg-black rounded-full hover:bg-gray-900 focus:outline-none"
         >
           Upload link
