@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import {
   Button,
-  Modal,
   Box,
   Typography,
   TextField,
   IconButton,
   Avatar,
   InputAdornment,
-  Link,
 } from "@mui/material";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -16,10 +14,10 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Loader from "../../utils/loader/loading";
 import Copyright from "../../utils/copyright";
-import { getAuthToken, storeAuthToken } from "../../redux/authToken";
+import CustomTextField from "../../utils/CustomTextField";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import CustomTextField from "../../utils/CustomTextField";
+import { storeAuthToken } from "../../redux/authToken";
 
 const style = {
   position: "absolute",
@@ -69,7 +67,6 @@ export default function LogIn() {
           toast.error("No response from the server. Please try again.");
           console.log("No response received:", error.request);
         } else {
-          // Something else went wrong
           toast.error(`Error: ${error.message}`);
           console.log("Error:", error.message);
         }
@@ -87,11 +84,8 @@ export default function LogIn() {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
-
     // Regular expression for password validation
     const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{8,}$/;
-    console.log("check = ", passwordRegex.test(newPassword));
-
     setIsValidPassword(passwordRegex.test(newPassword));
   };
 
@@ -107,7 +101,7 @@ export default function LogIn() {
   );
 
   return (
-    <>
+    <form onSubmit={handleLogIn}>
       <Box sx={style}>
         <div className="flex justify-center">
           <Avatar sx={{ m: 1, bgcolor: "#000000" }}>
@@ -145,17 +139,21 @@ export default function LogIn() {
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&.Mui-focused fieldset": {
-                  borderColor: "gray", // Change the outline color to gray when focused
+                  borderColor:
+                    !isValidPassword && password !== "" ? "red" : "gray",
                 },
                 "& input, & textarea": {
-                  color: "gray", // Change the text color to gray
+                  color: "black",
                 },
               },
               "& .MuiInputLabel-root": {
-                color: "gray", // Change the label color to gray
+                color: !isValidPassword && password !== "" ? "red" : "gray",
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "gray", // Change the label color to gray when focused
+                color: !isValidPassword && password !== "" ? "red" : "gray",
+              },
+              "& .MuiFormHelperText-root": {
+                color: !isValidPassword && password !== "" ? "red" : "gray",
               },
             }}
             InputProps={{
@@ -186,7 +184,6 @@ export default function LogIn() {
               },
             }}
             type="submit"
-            onClick={handleLogIn}
             disabled={isSignInDisabled || loading}
           >
             Log In
@@ -211,6 +208,6 @@ export default function LogIn() {
           <Copyright />
         </div>
       </Box>
-    </>
+    </form>
   );
 }

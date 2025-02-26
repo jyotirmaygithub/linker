@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Button,
-  Modal,
   Box,
   Typography,
   TextField,
@@ -13,7 +12,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-// import CloseIcon from '@mui/icons-material/Close';
 import Loader from "../../utils/loader/loading";
 import Copyright from "../../utils/copyright";
 import { storeAuthToken } from "../../redux/authToken";
@@ -74,7 +72,6 @@ export default function SignIn() {
           toast.error("No response from the server. Please try again.");
           console.log("No response received:", error.request);
         } else {
-          // Something else went wrong
           toast.error(`Error: ${error.message}`);
           console.log("Error:", error.message);
         }
@@ -84,13 +81,11 @@ export default function SignIn() {
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newUser = e.target.value;
     setUsername(newUser);
-    console.log("what is username = ", username);
     setIsValidName(newUser.length >= 4 && newUser.length <= 20);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target; // Get the current input value
-
+    const { value } = event.target;
     console.log("new to value = ", value);
   };
 
@@ -105,11 +100,7 @@ export default function SignIn() {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
-
-    // Regular expression for password validation
     const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{8,}$/;
-    console.log("check = ", passwordRegex.test(newPassword));
-
     setIsValidPassword(passwordRegex.test(newPassword));
   };
 
@@ -118,8 +109,6 @@ export default function SignIn() {
   ) => {
     const newPassword = e.target.value;
     setConfirmPassword(newPassword);
-    console.log("pass =", newPassword !== password);
-
     setIsValidConfirmPassword(newPassword === password);
   };
 
@@ -143,7 +132,7 @@ export default function SignIn() {
   );
 
   return (
-    <>
+    <form onSubmit={handleSignIn}>
       <Box sx={style}>
         <div className="flex justify-center">
           <Avatar sx={{ m: 1, bgcolor: "#000000" }}>
@@ -165,17 +154,20 @@ export default function SignIn() {
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&.Mui-focused fieldset": {
-                  borderColor: "gray", // Change the outline color to gray when focused
+                  borderColor: !isValidName && username !== "" ? "red" : "gray",
                 },
                 "& input, & textarea": {
-                  color: "gray", // Change the text color to gray
+                  color: "black",
                 },
               },
               "& .MuiInputLabel-root": {
-                color: "gray", // Change the label color to gray
+                color: !isValidName && username !== "" ? "red" : "gray",
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "gray", // Change the label color to gray when focused
+                color: !isValidName && username !== "" ? "red" : "gray",
+              },
+              "& .MuiFormHelperText-root": {
+                color: !isValidName && username !== "" ? "red" : "gray",
               },
             }}
             helperText={
@@ -209,17 +201,20 @@ export default function SignIn() {
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&.Mui-focused fieldset": {
-                  borderColor: "gray", // Change the outline color to gray when focused
+                  borderColor: !isValidPassword && password !== "" ? "red" : "gray",
                 },
                 "& input, & textarea": {
-                  color: "gray", // Change the text color to gray
+                  color: "black",
                 },
               },
               "& .MuiInputLabel-root": {
-                color: "gray", // Change the label color to gray
+                color: !isValidPassword && password !== "" ? "red" : "gray",
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "gray", // Change the label color to gray when focused
+                color: !isValidPassword && password !== "" ? "red" : "gray",
+              },
+              "& .MuiFormHelperText-root": {
+                color: !isValidPassword && password !== "" ? "red" : "gray",
               },
             }}
             InputProps={{
@@ -252,17 +247,32 @@ export default function SignIn() {
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&.Mui-focused fieldset": {
-                  borderColor: "gray", // Change the outline color to gray when focused
+                  borderColor:
+                    !isValidConfirmPassword && confirmPassword !== ""
+                      ? "red"
+                      : "gray",
                 },
                 "& input, & textarea": {
-                  color: "gray", // Change the text color to gray
+                  color: "black",
                 },
               },
               "& .MuiInputLabel-root": {
-                color: "gray", // Change the label color to gray
+                color:
+                  !isValidConfirmPassword && confirmPassword !== ""
+                    ? "red"
+                    : "gray",
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "gray", // Change the label color to gray when focused
+                color:
+                  !isValidConfirmPassword && confirmPassword !== ""
+                    ? "red"
+                    : "gray",
+              },
+              "& .MuiFormHelperText-root": {
+                color:
+                  !isValidConfirmPassword && confirmPassword !== ""
+                    ? "red"
+                    : "gray",
               },
             }}
             InputProps={{
@@ -293,7 +303,6 @@ export default function SignIn() {
               },
             }}
             type="submit"
-            onClick={handleSignIn}
             disabled={isSignInDisabled || loading}
           >
             Sign In
@@ -312,6 +321,6 @@ export default function SignIn() {
           <Copyright />
         </div>
       </Box>
-    </>
+    </form>
   );
 }
