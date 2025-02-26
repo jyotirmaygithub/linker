@@ -34,17 +34,17 @@ const CustomTextField: React.FC<TextFieldProps> = ({
       sx={{
         "& .MuiOutlinedInput-root": {
           "&.Mui-focused fieldset": {
-            borderColor: "gray", // Change the outline color to gray when focused
+            borderColor: error ? "red" : "gray", // Change the outline color to gray when focused
           },
           "& input, & textarea": {
-            color: "gray", // Change the text color to gray
+            color: "black", // Change the text color to gray
           },
         },
         "& .MuiInputLabel-root": {
-          color: "gray", // Change the label color to gray
+          color: error ? "red" : "gray", // Change the label color to gray
         },
         "& .MuiInputLabel-root.Mui-focused": {
-          color: "gray", // Change the label color to gray when focused
+          color: error ? "red" : "gray", // Change the label color to gray when focused
         },
         "& .MuiFormHelperText-root": {
           color: error ? "red" : "gray", // Change helper text color based on error

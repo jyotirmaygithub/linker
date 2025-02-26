@@ -32,10 +32,12 @@ const CommentBox = () => {
 
   return (
     <div className="space-y-4">
+      <div className="my-4">
+      <CustomeLine/>
+      </div>
       {comments.length > 0 ? (
         comments.map((comment, index) => (
           <div key={index}>
-           <CustomeLine/>
             <UserComment
               name={comment.commenterName}
               avatarUrl={comment.avatar}
